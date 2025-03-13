@@ -6,6 +6,24 @@
     <title>Form</title>
 </head>
 <body>
-    
+    <form action="/form" method="POST">
+        <div>
+            <p>First name</p>
+            <input type="text" name="first_name" class="form-input" placeholder="DongJu">
+        </div>
+        <div style="float: left; width: 3%; height: 1px;"></div>
+        <div>
+            <p>Last name</p>
+            <input type="text" name="last_name" class="form-input" placeholder="Lee">
+        </div>
+        <div style="float: left; width: 70%;">
+            <input type="checkbox" id="sub" name="subscribe">
+            <label for="sub"> Subscribe</label>
+        </div>
+        <div>
+            <input type="submit" value="Send" style="width: 30%;">
+        </div>
+    </form>
+    <p><a href="/">[main]</a></p>
 </body>
 </html>
