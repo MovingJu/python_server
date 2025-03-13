@@ -23,9 +23,11 @@ def form():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
+    session['is_user_admin'] = False
     if request.method == "POST":
         users = pd.read_csv('statics/db/users.csv')
         if (request.form.get("user_id") in users['user_id'].values and request.form.get("user_pw") in users['user_pw'].values):
+            session['is_user_admin'] = True
             return redirect(url_for('admin'))
             
     return render_template("login.html")
@@ -38,7 +40,10 @@ def result():
 
 @app.route('/admin')
 def admin():
-    return render_template("admin.html")
+    if (session["is_user_admin"]):
+        return render_template("admin.html")
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/clear')
 def clear():
