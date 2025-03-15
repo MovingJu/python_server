@@ -38,8 +38,18 @@ def sign_up():
 
 @app.route('/about')
 def about():
-    print('user got in about')
-    return render_template("about.html")
+    dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+    crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
+    try:
+        for i in session['authorities']:
+
+            if (crypto.decrypt(i) == "readable"):
+                return render_template("about.html")
+        else:
+
+            return redirect(url_for('index'))
+    except Exception:
+        return redirect(url_for('index'))
 
 @app.route('/form', methods=["GET", "POST"])
 def form():
@@ -55,21 +65,30 @@ def login():
         users = pd.read_csv('statics/db/users.csv')
 
         for idx, val in enumerate(users['user_id'].values):
-            print(idx, val)
+
             if (request.form.get("user_id") == val \
                 and users['user_pw'].values[idx] == str(secure_tools.encryption(request.form.get("user_pw")))):
-                session = {"authorities":users['authorities'][idx]}
-                print(session)
+                session["authorities"] = list(eval(users['authorities'].values[idx]))
+                print(session['authorities'], type(session['authorities']))
                 print("NOTICE:: PASSED!")
-                return redirect(url_for('admin'))
+                return redirect(url_for('index'))
             
     return render_template("login.html")
 
 @app.route('/admin')
 def admin():
-    if (session.get('authorities', False)):
-        return render_template("admin.html")
-    else:
+    dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+    crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
+
+    try:
+        for i in session['authorities']:
+
+            if (crypto.decrypt(i) == "admin"):
+                return render_template("admin.html")
+        else:
+
+            return redirect(url_for('login'))
+    except Exception:
         return redirect(url_for('login'))
 
 @app.route('/result')
