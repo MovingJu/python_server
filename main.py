@@ -1,11 +1,20 @@
 from flask import Flask, render_template, request, session, redirect, url_for
+from dotenv import load_dotenv
 import pandas as pd
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'admin'
+app.secret_key = os.getenv('SECRET_KEY')
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 @app.route('/')
 def index():
+    print(app.secret_key)
+    print(session)
     return render_template("index.html")
 
 @app.route('/about')
@@ -23,7 +32,6 @@ def form():
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
-    session['is_user_admin'] = False
     if request.method == "POST":
         users = pd.read_csv('statics/db/users.csv')
         if (request.form.get("user_id") in users['user_id'].values and request.form.get("user_pw") in users['user_pw'].values):
@@ -40,7 +48,7 @@ def result():
 
 @app.route('/admin')
 def admin():
-    if (session["is_user_admin"]):
+    if (session.get('is_user_admin', False)):
         return render_template("admin.html")
     else:
         return redirect(url_for('login'))
@@ -50,6 +58,14 @@ def clear():
     session.clear()
     print(session)
     return redirect(url_for('form'))
+
+@app.route('/sign_up', methods=["GET", "POST"])
+def sign_up():
+    if request.method == "POST":
+        users = pd.read_csv('statics/db/users.csv')
+        users.loc[len(users)] = [request.form.get("user_id"), request.form.get("user_pw")]            
+    return render_template("login.html")
+
 
 if __name__ == '__main__':
     app.run(debug=True)
