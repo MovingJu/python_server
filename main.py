@@ -1,24 +1,43 @@
 from flask import Flask, render_template, request, session, redirect, url_for
-from dotenv import load_dotenv
 import pandas as pd
+import dotenv
 import os
 
-load_dotenv()
+from py_libs import user_tools, csv_tools, secure_tools
 
+dotenv.load_dotenv('/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env')
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
-app = Flask(__name__)
-app.secret_key = os.urandom(24)
-
 @app.route('/')
 def index():
-    print(app.secret_key)
-    print(session)
     return render_template("index.html")
 
+
+@app.route('/sign_up', methods=["GET", "POST"])
+def sign_up():
+    if request.method == "POST":
+        user_id = request.form.get("user_id")
+        user_pw = request.form.get("user_pw")
+        admin_inquire = "admin" if request.form.get("admin_inquire") else None
+        
+        try:
+            if admin_inquire:
+                new_user = user_tools.User_cookies(user_id, user_pw, authorities=set({admin_inquire}))
+            else:
+                new_user = user_tools.User_cookies(user_id, user_pw)
+            
+            csv_tools.append_csv('statics/db/users.csv', new_user.get_cookies())
+
+            return redirect(url_for('login'))
+
+        except Exception as e:
+            return render_template("error_page.html", error_msg = f"회원가입 중 오류 발생: {e}")
+
+    return render_template("sign_up.html")
+
 @app.route('/about')
-def hello():
+def about():
     print('user got in about')
     return render_template("about.html")
 
@@ -34,11 +53,24 @@ def form():
 def login():
     if request.method == "POST":
         users = pd.read_csv('statics/db/users.csv')
-        if (request.form.get("user_id") in users['user_id'].values and request.form.get("user_pw") in users['user_pw'].values):
-            session['is_user_admin'] = True
-            return redirect(url_for('admin'))
+
+        for idx, val in enumerate(users['user_id'].values):
+            print(idx, val)
+            if (request.form.get("user_id") == val \
+                and users['user_pw'].values[idx] == str(secure_tools.encryption(request.form.get("user_pw")))):
+                session = {"authorities":users['authorities'][idx]}
+                print(session)
+                print("NOTICE:: PASSED!")
+                return redirect(url_for('admin'))
             
     return render_template("login.html")
+
+@app.route('/admin')
+def admin():
+    if (session.get('authorities', False)):
+        return render_template("admin.html")
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/result')
 def result():
@@ -46,26 +78,13 @@ def result():
     subscribe = session.get('user_subscription', 'No') 
     return render_template("result.html", name=name, subscribe=subscribe)
 
-@app.route('/admin')
-def admin():
-    if (session.get('is_user_admin', False)):
-        return render_template("admin.html")
-    else:
-        return redirect(url_for('login'))
-
 @app.route('/clear')
 def clear():
     session.clear()
     print(session)
     return redirect(url_for('form'))
 
-@app.route('/sign_up', methods=["GET", "POST"])
-def sign_up():
-    if request.method == "POST":
-        users = pd.read_csv('statics/db/users.csv')
-        users.loc[len(users)] = [request.form.get("user_id"), request.form.get("user_pw")]            
-    return render_template("login.html")
-
 
 if __name__ == '__main__':
+    print(os.getenv('SECRET_KEY'))
     app.run(debug=True)
