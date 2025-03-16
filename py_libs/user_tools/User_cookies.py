@@ -3,7 +3,8 @@ import dotenv
 import os
 
 from py_libs import errors, secure_tools
-from main import users_csv, key_env
+from config import users_csv, key_env
+
 
 class User_cookies:
     """Management tools for user sign_in, handling user informations like object.

@@ -4,7 +4,7 @@ import base64
 import os
 import dotenv
 
-from main import key_env
+from config import key_env
 
 dotenv.load_dotenv(key_env)
 
