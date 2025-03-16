@@ -2,8 +2,10 @@ import os
 import dotenv
 from bcrypt import hashpw, checkpw
 
+from main import key_env
+
 # 환경 변수 파일 로드
-SALT_FILE = "/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env"
+SALT_FILE = key_env
 dotenv.load_dotenv(SALT_FILE)
 
 SALT = os.getenv("BCRYPT_SALT")

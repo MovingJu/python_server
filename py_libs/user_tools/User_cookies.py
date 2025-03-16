@@ -3,6 +3,7 @@ import dotenv
 import os
 
 from py_libs import errors, secure_tools
+from main import users_csv, key_env
 
 class User_cookies:
     """Management tools for user sign_in, handling user informations like object.
@@ -10,7 +11,7 @@ class User_cookies:
 
     def __new__(cls, user_id:str, user_pw:str, *args, **kwargs):
         
-        users = pd.read_csv("statics/db/users.csv")
+        users = pd.read_csv(users_csv)
         if user_id in users['user_id'].values:
             raise errors.User_already_sign_in("Use different username.")
         
@@ -28,7 +29,7 @@ class User_cookies:
             self.authorities = authorities
             self.authorities.update({"readable"})
 
-            dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+            dotenv.load_dotenv(key_env)
             crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
             self.authorities = {crypto.encrypt(i) for i in self.authorities}
 

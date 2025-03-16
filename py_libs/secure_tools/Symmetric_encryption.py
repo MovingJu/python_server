@@ -4,7 +4,9 @@ import base64
 import os
 import dotenv
 
-dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+from main import key_env
+
+dotenv.load_dotenv(key_env)
 
 class Symmetric_Encryption:
     def __init__(self, key: bytes = None):
@@ -26,7 +28,7 @@ class Symmetric_Encryption:
         return unpad(cipher.decrypt(ciphertext), AES.block_size).decode()
 
 if __name__ == "__main__":
-    dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+    dotenv.load_dotenv(key_env)
     crypto = Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
     print("🔑 사용된 키:", crypto.key.hex())
     

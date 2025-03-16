@@ -5,7 +5,11 @@ import os
 
 from py_libs import user_tools, csv_tools, secure_tools
 
-dotenv.load_dotenv('/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env')
+key_env = "static/db/key.env"
+
+users_csv = 'static/db/users.csv'
+
+dotenv.load_dotenv(key_env)
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY')
 
@@ -27,7 +31,7 @@ def sign_up():
             else:
                 new_user = user_tools.User_cookies(user_id, user_pw)
             
-            csv_tools.append_csv('statics/db/users.csv', new_user.get_cookies())
+            csv_tools.append_csv(users_csv, new_user.get_cookies())
 
             return redirect(url_for('login'))
 
@@ -38,7 +42,7 @@ def sign_up():
 
 @app.route('/about')
 def about():
-    dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+    dotenv.load_dotenv(key_env)
     crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
     try:
         for i in session['authorities']:
@@ -47,22 +51,35 @@ def about():
                 return render_template("about.html")
         else:
 
-            return redirect(url_for('index'))
+            return redirect(url_for('login'))
     except Exception:
-        return redirect(url_for('index'))
+        return redirect(url_for('login'))
 
 @app.route('/form', methods=["GET", "POST"])
 def form():
+    
     if request.method == "POST":
         session['user_name'] = request.form.get("first_name") + request.form.get('last_name')
         session['user_subscription'] = "Yes" if request.form.get("subscribe") else "No"
         return redirect(url_for('result'))
-    return render_template("form.html")
+    
+    dotenv.load_dotenv(key_env)
+    crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
+    try:
+        for i in session['authorities']:
+
+            if (crypto.decrypt(i) == "readable"):
+                return render_template("form.html")
+        else:
+
+            return redirect(url_for('login'))
+    except Exception:
+        return redirect(url_for('login'))
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        users = pd.read_csv('statics/db/users.csv')
+        users = pd.read_csv(users_csv)
 
         for idx, val in enumerate(users['user_id'].values):
 
@@ -77,7 +94,7 @@ def login():
 
 @app.route('/admin')
 def admin():
-    dotenv.load_dotenv("/home/galesky/Documents/GitHub/server/python_server/statics/db/key.env")
+    dotenv.load_dotenv(key_env)
     crypto = secure_tools.Symmetric_Encryption(bytes.fromhex(os.getenv('AUTHORITY_KEY')))
 
     try:
@@ -97,11 +114,12 @@ def result():
     subscribe = session.get('user_subscription', 'No') 
     return render_template("result.html", name=name, subscribe=subscribe)
 
-@app.route('/clear')
-def clear():
+@app.route('/logout')
+def logout():
     session.clear()
     print(session)
-    return redirect(url_for('form'))
+    return redirect(url_for('index'))
+
 
 
 if __name__ == '__main__':
