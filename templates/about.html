@@ -4,10 +4,75 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel='stylesheet' href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel='stylesheet' href="{{ url_for('static', filename='css/about.css') }}">
     <title>About</title>
 </head>
 <body>
-    
+    <nav class="flex-container">
+        <div>LOGO</div>
+        <div style="flex-grow: 1;"></div>
+        <div>products</div>
+        <div>services</div>
+    </nav>
+
+    <main class="main-background">
+        <h1 class="main-title">Buy Our Carrots!</h1>
+        <button class="main-button">buy now</button>
+        <p class="main-parag">Are you looking for the perfect combination of crisp texture, 
+            natural sweetness, and outstanding nutritional benefits? 
+            Look no further! Our premium-quality carrots are grown with care, 
+            ensuring that every bite delivers a burst of flavor and essential vitamins. 
+            Whether you enjoy them raw as a healthy snack, blended into a delicious smoothie, 
+            or cooked to perfection in your favorite dishes, 
+            our farm-fresh carrots will never disappoint.</p>
+    </main>
+
+    <div class="parag-box">
+        <p>CarrotCarrot</p>
+        <p class="main-sub-parag">ahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+            hhhhhhhhhhhhhhhhhhhhh</p>
+    </div>
+
+    <div style="margin-top: 20px;"></div>
+
+    <div class="parag-box form-box">
+        <div class="h-100">
+            <h2 style="margin-top: 0;">Contact us</h2>
+            <p>Your email</p>
+            <input type="email" class="form-input" placeholder="email@email.com">
+        </div>
+
+        <div class="h-50">
+            <div>
+                <p>First name</p>
+                <input type="text" class="form-input" placeholder="DongJu">
+            </div>
+            <div style="float: left; width: 3%; height: 1px;"></div>
+            <div>
+                <p>Last name</p>
+                <input type="text" class="form-input" placeholder="Lee">
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+
+        <div class="h-100">
+            <p>Message</p>
+            <textarea class="form-input" placeholder="Something to tell us" 
+            style="width: 100%; height: 100px;"></textarea>
+        </div>
+        <div style="margin-top: 10px;"></div>
+
+        <div class="h-100">
+            <div style="float: left; width: 70%;">
+                <input type="checkbox" id="sub"><label for="sub"> Subscribe</label>
+            </div>
+            <div>
+                <button style="width: 30%;">Send</button>
+            </div>
+        </div>
+
+        <div style="clear: both;"></div>
+    </div>
     <p><a href="/">[main]</a></p>
 </body>
 </html>
