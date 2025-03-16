@@ -4,10 +4,7 @@ import dotenv
 import os
 
 from py_libs import user_tools, csv_tools, secure_tools
-
-key_env = "static/db/key.env"
-
-users_csv = 'static/db/users.csv'
+from config import key_env, users_csv
 
 dotenv.load_dotenv(key_env)
 app = Flask(__name__)

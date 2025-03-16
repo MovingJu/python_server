@@ -2,7 +2,7 @@ import os
 import dotenv
 from bcrypt import hashpw, checkpw
 
-from main import key_env
+from config import key_env
 
 # 환경 변수 파일 로드
 SALT_FILE = key_env
