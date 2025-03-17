@@ -7,7 +7,7 @@
 
 # branches
 
- git like branch management is used.
+ - **git like branch management is used.**
 
  main: main branch
  
