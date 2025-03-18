@@ -7,7 +7,7 @@
 
 # branches
 
- - **git like branch management is used.**
+## **git like branch management is used.**
 
  - **main**: main branch
  
@@ -16,7 +16,7 @@
  - **develop**: main develop branch
  
  - **feature**: features testing branch
- - - This is also for **Pull Request**
+   - This is also for **Pull Request**
  
  - **hotfix**: fixing hot error branch
 
