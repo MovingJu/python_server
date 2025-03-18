@@ -9,15 +9,16 @@
 
  - **git like branch management is used.**
 
- main: main branch
+ - **main**: main branch
  
- release: versions and tags manage branch
+ - **release**: versions and tags manage branch
  
- develop: main develop branch
+ - **develop**: main develop branch
  
- feature: features testing branch
+ - **feature**: features testing branch
+ - - This is also for **Pull Request**
  
- hotfix: fixing hot error branch
+ - **hotfix**: fixing hot error branch
 
 # 이 리포지토리의 목적
 
