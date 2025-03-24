@@ -1,5 +1,5 @@
 venv*/
 *.env
-statics/db/
+static/db/
 __pycache__
 *.zip
