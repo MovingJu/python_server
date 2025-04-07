@@ -2,3 +2,4 @@
 static/db/
 __pycache__
 *.zip
+venv*/
