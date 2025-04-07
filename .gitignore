@@ -1,0 +1,4 @@
+*.env
+static/db/
+__pycache__
+*.zip
