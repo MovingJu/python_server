@@ -121,4 +121,4 @@ def logout():
 
 if __name__ == '__main__':
     print(os.getenv('SECRET_KEY'))
-    app.run(debug=True)
+    app.run(app.run(host="0.0.0.0", port=5000, debug=True))
